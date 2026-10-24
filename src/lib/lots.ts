@@ -1,9 +1,11 @@
 import { db } from './db';
 import { auctionPhase, minimumBid, reserveMet } from './bidding-engine';
 import { bidderAlias } from './format';
+import { settleSoon } from './notify';
 
 /** Public live state of a lot, as seen by `viewerId` (who may be anonymous). Safe to send to the browser. */
 export async function lotState(lotNumber: number, viewerId: string | null) {
+  settleSoon();
   const a = await db.auction.findUnique({
     where: { lotNumber },
     include: {

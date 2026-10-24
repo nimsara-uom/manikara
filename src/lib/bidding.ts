@@ -44,7 +44,7 @@ export async function placeBid(auctionId: string, userId: string, maxAmount: num
         // Offset by a millisecond each so history sorts in the order the engine produced
         await tx.bid.create({ data: { auctionId, ...bid, createdAt: new Date(now.getTime() + i) } });
       }
-      return result;
+      return { ...result, previousLeaderId: auction.leaderId };
     });
     if (done) return done;
   }
