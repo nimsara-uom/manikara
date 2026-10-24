@@ -1,0 +1,187 @@
+
+> manikara@0.1.0 dev
+> next dev
+
+   ▲ Next.js 15.5.28
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.56.1:3000
+   - Environments: .env
+   - Experiments (use with caution):
+     · serverActions
+
+ ✓ Starting...
+ ✓ Ready in 3.6s
+ ○ Compiling / ...
+ ✓ Compiled / in 10s (780 modules)
+ GET / 200 in 12561ms
+ GET / 200 in 11458ms
+ ○ Compiling /lots/[lot] ...
+ ✓ Compiled /lots/[lot] in 8.3s (888 modules)
+ GET / 200 in 9292ms
+ GET /media/14677f200a10c17b2b95afd591b8fbaf4712b1cd30995f607e87f1a8030cf54a.svg 200 in 11767ms
+ GET /media/43a42e722aa4c57e2c1978d074a5d8f2306d41c2f6fa907fe53a86234f83f752.svg 200 in 11770ms
+ GET /media/ae12339ae89b882477804c0050b797d1a8e4b30bd2147269f99353ea528ccd37.svg 200 in 5965ms
+ GET /media/3025f9967fda0ec01373301aed9c2b07031a0e0002a5ce491a2e69cd75fe502b.svg 200 in 5944ms
+ GET /media/bd3732f03c39a3919dcd01dff4238b672908a51bc729138cb2c2e8e6b8f4e77c.svg 200 in 11813ms
+ GET /lots/1 200 in 14179ms
+ GET /lots/1 200 in 3472ms
+ ○ Compiling /verify ...
+ ✓ Compiled /verify in 1084ms (891 modules)
+ GET /verify 200 in 2644ms
+ GET /verify 200 in 2669ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 1225ms (899 modules)
+ GET /login 200 in 1953ms
+ GET / 200 in 1360ms
+ GET / 200 in 65ms
+ GET / 200 in 69ms
+ GET /verify 200 in 83ms
+ GET / 200 in 110ms
+ GET / 200 in 89ms
+ GET / 200 in 129ms
+ GET /media/bd3732f03c39a3919dcd01dff4238b672908a51bc729138cb2c2e8e6b8f4e77c.svg 200 in 78ms
+ GET /media/14677f200a10c17b2b95afd591b8fbaf4712b1cd30995f607e87f1a8030cf54a.svg 200 in 132ms
+ GET /media/43a42e722aa4c57e2c1978d074a5d8f2306d41c2f6fa907fe53a86234f83f752.svg 200 in 135ms
+ GET /media/ae12339ae89b882477804c0050b797d1a8e4b30bd2147269f99353ea528ccd37.svg 200 in 108ms
+ GET /media/3025f9967fda0ec01373301aed9c2b07031a0e0002a5ce491a2e69cd75fe502b.svg 200 in 131ms
+ GET /verify 200 in 86ms
+ GET / 200 in 37ms
+ GET /login 200 in 42ms
+ GET / 200 in 45ms
+ GET /lots/1 200 in 117ms
+ GET /media/ee2f0b990c0f5a338c94d8ef808a2c33d89c09f4a2db13ec77ffdfd4f35d1d88.svg 200 in 54ms
+ ○ Compiling /api/lots/[lot] ...
+ ✓ Compiled /api/lots/[lot] in 1287ms (913 modules)
+ GET /api/lots/1 200 in 2654ms
+ GET /api/lots/1 200 in 81ms
+ GET /api/lots/1 200 in 74ms
+ GET /api/lots/1 200 in 64ms
+ GET /api/lots/1 200 in 73ms
+ GET /api/lots/1 200 in 70ms
+ GET /api/lots/1 200 in 137ms
+ GET /api/lots/1 200 in 72ms
+ GET /api/lots/1 200 in 65ms
+ GET /api/lots/1 200 in 33ms
+ GET / 200 in 365ms
+ GET / 200 in 173ms
+ ✓ Compiled in 1438ms (907 modules)
+ GET / 200 in 974ms
+ ✓ Compiled in 1756ms (902 modules)
+ GET / 200 in 386ms
+ GET /lots/5 200 in 148ms
+ ✓ Compiled /media/[file] in 465ms (653 modules)
+ GET /media/6fb5b5e381462676c22083ad4a1b373b660b5ef3616e96205f948fce4e05a455.svg 200 in 726ms
+ GET / 200 in 214ms
+ ✓ Compiled in 875ms (903 modules)
+ GET / 200 in 659ms
+ ✓ Compiled in 4.8s (907 modules)
+ GET / 200 in 1603ms
+ ✓ Compiled in 724ms (656 modules)
+ GET / 200 in 2181ms
+ ✓ Compiled in 802ms (907 modules)
+ ✓ Compiled in 512ms (907 modules)
+ ✓ Compiled in 544ms (907 modules)
+ GET / 200 in 622ms
+ ✓ Compiled in 576ms (907 modules)
+ ✓ Compiled in 345ms (656 modules)
+ GET / 200 in 754ms
+ GET / 200 in 1853ms
+ GET /lots/1 200 in 814ms
+ GET /lots/4 200 in 394ms
+ GET /lots/5 200 in 405ms
+ ○ Compiling /verify ...
+ ✓ Compiled /verify in 2.1s (661 modules)
+ GET /verify 200 in 3793ms
+ GET /login 200 in 372ms
+ GET / 200 in 2064ms
+ ○ Compiling /register ...
+ ✓ Compiled /register in 1181ms (914 modules)
+ GET /register 200 in 2336ms
+ GET /lots/1 200 in 741ms
+ ○ Compiling /verify/[code] ...
+ ✓ Compiled /verify/[code] in 1642ms (919 modules)
+ GET /verify/MK-PKKR-PTRP-2APG-SNPH 200 in 4773ms
+ GET /lots/1 200 in 332ms
+ GET / 200 in 2895ms
+ GET /lots/1 200 in 3696ms
+ ○ Compiling /api/lots/[lot] ...
+ ✓ Compiled /api/lots/[lot] in 12.3s (675 modules)
+ GET /api/lots/1 200 in 16530ms
+ ○ Compiling /verify/[code] ...
+ ✓ Compiled /verify/[code] in 2.1s (680 modules)
+ GET /verify/MK-PKKR-PTRP-2APG-SNPH 200 in 9341ms
+ ✓ Compiled in 3.5s (927 modules)
+ GET / 200 in 1656ms
+ GET /lots/1 200 in 595ms
+ GET / 200 in 3763ms
+ GET /verify/MK-PKKR-PTRP-2APG-SNPH 200 in 655ms
+ ✓ Compiled in 2.5s (927 modules)
+ GET / 200 in 715ms
+ ✓ Compiled in 496ms (661 modules)
+ GET / 200 in 2346ms
+ GET / 200 in 2103ms
+ GET / 200 in 2297ms
+ GET / 200 in 6314ms
+ GET /lots/2 200 in 2307ms
+ ○ Compiling /api/lots/[lot] ...
+ ✓ Compiled /api/lots/[lot] in 9.8s (680 modules)
+ GET / 200 in 3521ms
+ GET / 200 in 980ms
+ GET / 200 in 306ms
+ GET / 200 in 1566ms
+ GET /lots/2 200 in 2233ms
+ GET /api/lots/2 200 in 393ms
+ GET /api/lots/2 200 in 105ms
+ GET /api/lots/2 200 in 222ms
+ GET /api/lots/2 200 in 130ms
+ ✓ Compiled in 2.3s (946 modules)
+ GET / 200 in 583ms
+ GET / 200 in 661ms
+ GET /lots/2 200 in 355ms
+ GET /login 200 in 139ms
+ ○ Compiling /register ...
+ ✓ Compiled /register in 688ms (682 modules)
+ GET /register 200 in 1125ms
+ GET / 200 in 757ms
+ ○ Compiling /verify ...
+ ✓ Compiled /verify in 853ms (684 modules)
+ GET /verify 200 in 1305ms
+ GET / 200 in 803ms
+ ○ Compiling /account ...
+ ✓ Compiled /account in 878ms (941 modules)
+ GET /account 307 in 1360ms
+ GET / 200 in 641ms
+ GET / 200 in 1789ms
+ GET /register 200 in 259ms
+ GET /login 200 in 133ms
+ GET /register?next=%2F 200 in 183ms
+ GET / 200 in 309ms
+ POST /register?next=%2F 303 in 991ms
+ GET / 200 in 6764ms
+ POST / 303 in 7419ms
+ GET / 200 in 4676ms
+ POST / 303 in 5148ms
+ GET /login 200 in 2020ms
+ GET / 200 in 7104ms
+ GET / 200 in 1541ms
+ POST /login 303 in 2352ms
+ GET / 200 in 1752ms
+ GET / 200 in 2445ms
+ POST / 303 in 3171ms
+ GET / 200 in 2514ms
+ POST / 303 in 2946ms
+ GET / 200 in 944ms
+ GET /login 200 in 116ms
+ GET / 200 in 189ms
+ GET /login 200 in 1089ms
+ GET / 200 in 364ms
+ POST /login 303 in 609ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 6.6s (920 modules)
+ GET /admin 200 in 9700ms
+ GET /admin 200 in 211ms
+ GET /admin 200 in 181ms
+ ○ Compiling /admin/gems/[id] ...
+ ✓ Compiled /admin/gems/new in 8s (1190 modules)
+ GET /admin/gems/new 200 in 6250ms
+ GET /admin/gems/cmvmdu9rd000nv04gcp7esoap 200 in 12090ms

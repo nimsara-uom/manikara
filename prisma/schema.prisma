@@ -1,0 +1,127 @@
+// Manikara data model.
+// SQLite for local development; switch `provider` to "postgresql" for production.
+// Money is stored as whole US dollars (Int).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         String    @default("USER") // USER | ADMIN
+  createdAt    DateTime  @default(now())
+  bids         Bid[]
+  autoBids     AutoBid[]
+  watches      Watch[]
+  leading      Auction[] @relation("Leader")
+}
+
+model Gem {
+  id          String     @id @default(cuid())
+  name        String
+  species     String
+  carat       Float
+  colorName   String
+  colorHex    String
+  clarity     String
+  cut         String
+  origin      String
+  treatment   String
+  lab         String
+  reportNo    String
+  dimensions  String?
+  description String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  images      GemImage[]
+  keys        GemKey[]
+  auction     Auction?
+}
+
+model GemImage {
+  id       String @id @default(cuid())
+  gemId    String
+  gem      Gem    @relation(fields: [gemId], references: [id], onDelete: Cascade)
+  file     String // <sha256>.<ext>, served from /media
+  sha256   String
+  position Int    @default(0)
+}
+
+// Every issued key is kept; editing a gem's facts revokes the old key and issues a new one.
+model GemKey {
+  id        String    @id @default(cuid())
+  gemId     String
+  gem       Gem       @relation(fields: [gemId], references: [id], onDelete: Cascade)
+  code      String    @unique // MK-XXXX-XXXX-XXXX-XXXX
+  payload   String // canonical JSON that was signed
+  signature String // Ed25519, base64
+  issuedAt  DateTime  @default(now())
+  revokedAt DateTime?
+}
+
+model Auction {
+  id            String    @id @default(cuid())
+  gemId         String    @unique
+  gem           Gem       @relation(fields: [gemId], references: [id], onDelete: Cascade)
+  lotNumber     Int       @unique
+  startingPrice Int
+  reservePrice  Int?
+  increment     Int
+  startsAt      DateTime
+  endsAt        DateTime
+  currentPrice  Int       @default(0)
+  bidCount      Int       @default(0)
+  leaderId      String?
+  leader        User?     @relation("Leader", fields: [leaderId], references: [id])
+  version       Int       @default(0) // optimistic lock for concurrent bids
+  createdAt     DateTime  @default(now())
+  bids          Bid[]
+  autoBids      AutoBid[]
+  watches       Watch[]
+}
+
+model Bid {
+  id        String   @id @default(cuid())
+  auctionId String
+  auction   Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int
+  isAuto    Boolean  @default(false) // placed by the proxy on the bidder's behalf
+  createdAt DateTime @default(now())
+
+  @@index([auctionId, createdAt])
+  @@index([userId])
+}
+
+// A bidder's secret maximum (proxy bidding).
+model AutoBid {
+  id        String   @id @default(cuid())
+  auctionId String
+  auction   Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  maxAmount Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([auctionId, userId])
+}
+
+model Watch {
+  userId    String
+  auctionId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  auction   Auction  @relation(fields: [auctionId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@id([userId, auctionId])
+}
