@@ -6,6 +6,7 @@ import { db } from '../src/lib/db';
 import { placeBid } from '../src/lib/bidding';
 import { factsFromGem, issueKey } from '../src/lib/gemkey';
 
+const DEMO_PASSWORD = 'Manikara#2026';
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
 
@@ -43,7 +44,10 @@ const GEMS = [
 ];
 
 async function main() {
-  // Children first; SQLite in Prisma does not cascade deleteMany
+  // Children first, so foreign keys are never violated
+  await db.securityEvent.deleteMany();
+  await db.otpCode.deleteMany();
+  await db.rateLimit.deleteMany();
   await db.bid.deleteMany();
   await db.autoBid.deleteMany();
   await db.watch.deleteMany();
@@ -53,10 +57,11 @@ async function main() {
   await db.gem.deleteMany();
   await db.user.deleteMany();
 
-  const passwordHash = await bcrypt.hash('manikara123', 10);
-  const admin = await db.user.create({ data: { email: 'admin@manikara.test', name: 'House Admin', passwordHash, role: 'ADMIN' } });
-  const ana = await db.user.create({ data: { email: 'ana@manikara.test', name: 'Ana Perera', passwordHash } });
-  const ben = await db.user.create({ data: { email: 'ben@manikara.test', name: 'Ben Silva', passwordHash } });
+  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 12);
+  const emailVerifiedAt = new Date();
+  const admin = await db.user.create({ data: { email: 'admin@manikara.test', name: 'House Admin', passwordHash, role: 'ADMIN', emailVerifiedAt } });
+  const ana = await db.user.create({ data: { email: 'ana@manikara.test', name: 'Ana Perera', passwordHash, emailVerifiedAt } });
+  const ben = await db.user.create({ data: { email: 'ben@manikara.test', name: 'Ben Silva', passwordHash, emailVerifiedAt } });
 
   const now = Date.now();
   // [startOffset, endOffset] relative to now
@@ -99,11 +104,12 @@ async function main() {
   await placeBid(auctions[1].id, ben.id, 11000);
   await placeBid(auctions[4].id, ben.id, 4200);
   await placeBid(auctions[4].id, ana.id, 5200);
-  await db.auction.update({ where: { id: auctions[4].id }, data: { endsAt: new Date(now - HOUR) } });
+  // Closed in the past and already settled, so no result emails go out for demo data
+  await db.auction.update({ where: { id: auctions[4].id }, data: { endsAt: new Date(now - HOUR), settledAt: new Date(now - HOUR) } });
 
   await db.watch.create({ data: { userId: ana.id, auctionId: auctions[0].id } });
 
-  console.log(`Seeded ${GEMS.length} lots. Sign in as ${admin.email} / ana@manikara.test / ben@manikara.test with password "manikara123".`);
+  console.log(`Seeded ${GEMS.length} lots. Sign in as ${admin.email} / ana@manikara.test / ben@manikara.test with password "${DEMO_PASSWORD}".`);
 }
 
 main()

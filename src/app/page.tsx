@@ -8,6 +8,7 @@ import { Countdown } from '@/components/Countdown';
 import { HeroGem } from '@/components/HeroGem';
 import { LotCard, type LotCardData } from '@/components/LotCard';
 import { Preloader } from '@/components/Preloader';
+import { settleSoon } from '@/lib/notify';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,7 @@ const MARQUEE = ['Sapphire', 'Padparadscha', '*Ruby', 'Alexandrite', 'Spinel', "
 const photoOf = (images: { file: string }[]) => images[0]?.file ?? null;
 
 export default async function Home() {
+  settleSoon();
   const [user, auctions, stoneCount, bidCount] = await Promise.all([
     currentUser(),
     db.auction.findMany({

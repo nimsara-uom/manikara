@@ -9,7 +9,21 @@ const existing = existsSync(ENV_FILE) ? readFileSync(ENV_FILE, 'utf8') : '';
 const has = name => new RegExp(`^${name}=`, 'm').test(existing);
 
 const additions = [];
-if (!has('DATABASE_URL')) additions.push('DATABASE_URL="file:./dev.db"');
+if (!has('DATABASE_URL')) {
+  additions.push('# PostgreSQL. Replace CHANGE_ME with the password of your postgres user.');
+  additions.push('DATABASE_URL="postgresql://postgres:CHANGE_ME@localhost:5432/manikara?schema=public"');
+} else if (/^DATABASE_URL="?file:/m.test(existing)) {
+  console.error('DATABASE_URL in .env still points at SQLite. Change it to your PostgreSQL URL, e.g.\n' +
+    '  DATABASE_URL="postgresql://postgres:PASSWORD@localhost:5432/manikara?schema=public"');
+  process.exit(1);
+}
+if (!/BREVO_API_KEY/.test(existing)) {
+  additions.push('# Brevo transactional email. Leave empty in development to print emails in the terminal.');
+  additions.push('BREVO_API_KEY=""');
+  additions.push('# MAIL_FROM_EMAIL must be a sender you have verified in Brevo, e.g. no-reply@yourdomain.com');
+  additions.push('MAIL_FROM_EMAIL=""');
+  additions.push('MAIL_FROM_NAME="Manikara"');
+}
 if (!has('APP_URL')) additions.push('APP_URL="http://localhost:3000"');
 if (!has('SESSION_SECRET')) additions.push(`SESSION_SECRET="${randomBytes(32).toString('base64url')}"`);
 
@@ -27,7 +41,7 @@ if (!has('GEMKEY_PRIVATE_KEY') || !has('GEMKEY_PUBLIC_KEY')) {
 if (additions.length) {
   const sep = existing && !existing.endsWith('\n') ? '\n' : '';
   writeFileSync(ENV_FILE, existing + sep + additions.join('\n') + '\n');
-  console.log(`Added ${additions.length} value(s) to ${ENV_FILE}`);
+  console.log(`Updated ${ENV_FILE}`);
 } else {
   console.log(`${ENV_FILE} already complete`);
 }
