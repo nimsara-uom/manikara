@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
+import { audit } from '@/lib/audit';
 import { requireAdmin } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { canonicalJson, factsFromGem, issueKey } from '@/lib/gemkey';
@@ -34,7 +35,7 @@ function firstIssue(e: z.ZodError) {
 }
 
 export async function saveGem(_prev: AdminFormState, form: FormData): Promise<AdminFormState> {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const id = String(form.get('id') ?? '') || null;
   const parsed = GemInput.safeParse(Object.fromEntries([...form.entries()].filter(([, v]) => typeof v === 'string')));
   if (!parsed.success) return { error: firstIssue(parsed.error) };
@@ -57,6 +58,7 @@ export async function saveGem(_prev: AdminFormState, form: FormData): Promise<Ad
       await tx.gemKey.create({ data: { gemId: g.id, ...issueKey(factsFromGem(g)) } });
       return g;
     });
+    await audit('ADMIN_GEM_SAVED', admin.id, `created ${gem.id} "${gem.name}"`);
     revalidatePath('/admin');
     redirect(`/admin/gems/${gem.id}?created=1`);
   }
@@ -77,6 +79,7 @@ export async function saveGem(_prev: AdminFormState, form: FormData): Promise<Ad
     return true;
   });
 
+  await audit('ADMIN_GEM_SAVED', admin.id, `edited ${id}${reissued ? ', key re-issued' : ''}`);
   revalidatePath('/', 'layout');
   return { notice: reissued ? 'Saved. The facts changed, so the old Gem Key was revoked and a new one issued.' : 'Saved. Gem Key unchanged.' };
 }
@@ -97,7 +100,7 @@ const AuctionInput = z.object({
 });
 
 export async function saveAuction(_prev: AdminFormState, form: FormData): Promise<AdminFormState> {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const parsed = AuctionInput.safeParse(Object.fromEntries(form));
   if (!parsed.success) return { error: firstIssue(parsed.error) };
   const a = parsed.data;
@@ -109,6 +112,9 @@ export async function saveAuction(_prev: AdminFormState, form: FormData): Promis
   const clash = await db.auction.findUnique({ where: { lotNumber: a.lotNumber } });
   if (clash && clash.gemId !== a.gemId) return { error: `Lot ${a.lotNumber} is already taken.` };
 
+  // Moving the close into the future re-opens a lot that was already settled
+  const reopen = a.endsAt > new Date() ? { settledAt: null } : {};
+
   if (existing && existing.bidCount > 0) {
     // Once people have bid, only the closing time may move — and only later
     const changed = existing.lotNumber !== a.lotNumber || existing.startingPrice !== a.startingPrice
@@ -116,22 +122,24 @@ export async function saveAuction(_prev: AdminFormState, form: FormData): Promis
       || existing.startsAt.getTime() !== a.startsAt.getTime();
     if (changed) return { error: 'This lot has bids. Only the closing time can be changed.' };
     if (a.endsAt < existing.endsAt) return { error: 'This lot has bids. The closing time can only be extended.' };
-    await db.auction.update({ where: { id: existing.id }, data: { endsAt: a.endsAt, version: { increment: 1 } } });
+    await db.auction.update({ where: { id: existing.id }, data: { endsAt: a.endsAt, version: { increment: 1 }, ...reopen } });
   } else if (existing) {
-    await db.auction.update({ where: { id: existing.id }, data: { ...a, version: { increment: 1 } } });
+    await db.auction.update({ where: { id: existing.id }, data: { ...a, version: { increment: 1 }, ...reopen } });
   } else {
     await db.auction.create({ data: a });
   }
+  await audit('ADMIN_AUCTION_SAVED', admin.id, `gem ${a.gemId} lot ${a.lotNumber}`);
   revalidatePath('/', 'layout');
   return { notice: 'Auction saved.' };
 }
 
 export async function deleteGem(id: string) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const gem = await db.gem.findUnique({ where: { id }, include: { auction: true } });
   if (!gem) redirect('/admin');
   if (gem.auction && gem.auction.bidCount > 0) throw new Error('Cannot delete a stone whose lot has bids.');
   await db.gem.delete({ where: { id } });
+  await audit('ADMIN_GEM_DELETED', admin.id, `${id} "${gem.name}"`);
   revalidatePath('/', 'layout');
   redirect('/admin');
 }

@@ -20,8 +20,8 @@ export function AuthForm({
       )}
       <div className="field"><label htmlFor="email">Email</label><input id="email" name="email" type="email" required autoComplete="email" /></div>
       <div className="field">
-        <label htmlFor="password">Password{withName && ' · at least 8 characters'}</label>
-        <input id="password" name="password" type="password" required minLength={withName ? 8 : undefined}
+        <label htmlFor="password">Password{withName && ' · at least 10 characters'}</label>
+        <input id="password" name="password" type="password" required minLength={withName ? 10 : undefined}
           autoComplete={withName ? 'new-password' : 'current-password'} />
       </div>
       {state?.error && <p className="msg error" role="alert">{state.error}</p>}
