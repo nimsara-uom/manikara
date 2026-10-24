@@ -10,6 +10,7 @@
     "start": "next start",
     "seed": "tsx prisma/seed.ts",
     "make-admin": "tsx scripts/make-admin.ts",
+    "settle": "tsx scripts/settle.ts",
     "test": "tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit"
   },
